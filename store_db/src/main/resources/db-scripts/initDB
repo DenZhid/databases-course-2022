@@ -1,0 +1,76 @@
+-- Создание базы
+CREATE DATABASE computer_games_store;
+
+-- Создание таблиц
+CREATE TABLE customer
+(
+    id       serial PRIMARY KEY,
+    login    text NOT NULL UNIQUE,
+    password text NOT NULL UNIQUE,
+    email    text NOT NULL UNIQUE
+);
+
+CREATE TABLE publisher
+(
+    id         serial PRIMARY KEY,
+    name       text    NOT NULL UNIQUE,
+    country    text    NOT NULL,
+    found_date DATE    NOT NULL,
+    game_count INTEGER NOT NULL
+);
+
+CREATE TABLE genre
+(
+    id         serial PRIMARY KEY,
+    name       text                                                   NOT NULL UNIQUE,
+    popularity SMALLINT CHECK (popularity <= 100 and popularity >= 0) NOT NULL
+);
+
+CREATE TABLE developer
+(
+    id           serial PRIMARY KEY,
+    publisher_id serial REFERENCES publisher (id),
+    name         text    NOT NULl UNIQUE,
+    country      text    NOT NULL,
+    found_date   DATE    NOT NULL,
+    game_count   INTEGER NOT NULL
+);
+
+CREATE TABLE game
+(
+    id           serial PRIMARY KEY,
+    developer_id serial REFERENCES developer (id) NOT NULL,
+    publisher_id serial REFERENCES publisher (id) NOT NULL,
+    name         text                             NOT NULL UNIQUE,
+    release_date DATE                             NOT NULL,
+    price        DOUBLE PRECISION                 NOT NULL,
+    description  text UNIQUE                      NOT NULL
+);
+
+CREATE TABLE game_to_genre
+(
+    game_id  serial REFERENCES game (id)  NOT NULL,
+    genre_id serial REFERENCES genre (id) NOT NULL
+);
+
+CREATE TABLE purchase
+(
+    id          serial PRIMARY KEY,
+    customer_id serial REFERENCES customer (id) NOT NULL,
+    date        DATE                            NOT NULL
+);
+
+CREATE TABLE purchase_to_game
+(
+    purchase_id serial REFERENCES purchase (id) NOT NULL,
+    game_id     serial REFERENCES game (id)     NOT NULL
+);
+
+CREATE TABLE review
+(
+    id          serial PRIMARY KEY,
+    customer_id serial REFERENCES customer (id)           NOT NULL,
+    game_id     serial REFERENCES game (id)               NOT NULL,
+    rate        SMALLINT CHECK (rate <= 10 and rate >= 0) NOT NULL,
+    review_text text                                      NOT NULL
+);
