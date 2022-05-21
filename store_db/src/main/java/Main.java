@@ -14,12 +14,20 @@ public class Main {
 
         try {
             Connection connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/computer_games_store",
-                    "db_course",
+                    "jdbc:postgresql://localhost/computer_games_store",
+                    "postgres",
                     "den2001s"
             );
             Initiator initiator = new Initiator(Locale.forLanguageTag("ru"), connection);
-            initiator.insertRandomData();
+            initiator.insertRandomData(
+                    10,
+                    8,
+                    3,
+                    5,
+                    10,
+                    4,
+                    5
+            );
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();

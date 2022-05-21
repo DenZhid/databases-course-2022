@@ -1,6 +1,5 @@
 package generators;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,7 +15,6 @@ public class DeveloperGenerator extends Generator {
 
     private final Faker faker;
     private Map<Long, Publisher> publishersMap;
-    private int gameCount;
 
     public DeveloperGenerator(Random random, Faker faker) {
         super(random);
@@ -25,19 +23,13 @@ public class DeveloperGenerator extends Generator {
 
     @Override
     protected Developer generate() {
-        Iterator<Map.Entry<Long, Publisher>> entriesIterator = publishersMap.entrySet().iterator();
-        int numberOfEntry = random.nextInt(publishersMap.size());
-        for (int i = 0; i < numberOfEntry - 1; i++) {
-            entriesIterator.next();
-        }
-        Map.Entry<Long, Publisher> foundEntry = entriesIterator.next();
         return new Developer(
-                foundEntry.getKey(),
+                createRandomPublisherId(),
                 faker.company().name(), // Используем случайное имя компании
                 faker.country().name(),
-                // Примерно 22 года до сегодняшней даты
-                faker.date().past(8030, TimeUnit.DAYS).toInstant().atZone(ZoneId.of("ECT")).toLocalDate(),
-                gameCount // Подсчитываем количество игр позже
+                // Примерно 22 года до сегодняшней даты, но не меньше года
+                faker.date().past(8030, 365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                random.nextInt(51)
         );
     }
 
@@ -45,7 +37,13 @@ public class DeveloperGenerator extends Generator {
         this.publishersMap = publishersMap;
     }
 
-    public void setGameCount(int gameCount) {
-        this.gameCount = gameCount;
+    // Назначаем случайного Publisher
+    private long createRandomPublisherId() {
+        Iterator<Map.Entry<Long, Publisher>> entriesIterator = publishersMap.entrySet().iterator();
+        int numberOfEntry = random.nextInt(publishersMap.size());
+        for (int i = 0; i < numberOfEntry - 1; i++) {
+            entriesIterator.next();
+        }
+        return entriesIterator.next().getKey();
     }
 }

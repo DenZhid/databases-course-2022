@@ -1,6 +1,5 @@
 package generators;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class GeneratorChooser {
         this.games = new GameGenerator(random, faker);
         this.gameToGenre = new GameToGenreGenerator(random);
         this.genres = new GenreGenerator(random, faker);
-        this.orders = new OrderGenerator(random);
+        this.orders = new OrderGenerator(random, faker);
         this.orderToGame = new OrderToGameGenerator(random);
         this.publishers = new PublisherGenerator(random, faker);
         this.reviews = new ReviewGenerator(random, faker);
@@ -77,7 +76,7 @@ public class GeneratorChooser {
     }
 
     public void setGenresIds(List<Long> genresIds) {
-        this.gameToGenre.setGenresId(genresIds);
+        this.gameToGenre.setGenresIds(genresIds);
     }
 
     public void setPublishersIdsAndDates(Map<Long, Publisher> publisherMap) {
@@ -92,15 +91,11 @@ public class GeneratorChooser {
     public void setGamesIdsAndDates(Map<Long, LocalDate> gamesIdsAndDates) {
         this.gameToGenre.setGamesIdAndDates(gamesIdsAndDates);
         this.reviews.setGamesIdsAndDates(gamesIdsAndDates);
-        this.orderToGame.setGameIdsAndDates(gamesIdsAndDates);
+        this.orders.setGamesIdsAndDates(gamesIdsAndDates);
+        this.orderToGame.setGamesIdAndDates(gamesIdsAndDates);
     }
 
     public void setOrdersIds(List<Long> ordersIds) {
         this.orderToGame.setOrdersIds(ordersIds);
-    }
-
-    public void setGameCount(int gameCount) {
-        this.publishers.setGameCount(gameCount);
-        this.developers.setGameCount(gameCount);
     }
 }
