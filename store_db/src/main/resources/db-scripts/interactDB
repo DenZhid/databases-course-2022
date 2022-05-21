@@ -1,0 +1,96 @@
+-- 1. Все записи из таблицы publisher
+SELECT *
+FROM publisher;
+
+-- 2.1. id отзыва, где оценка выше или равна 5
+SELECT id, rate
+FROM review
+WHERE rate BETWEEN '5' AND '10';
+
+-- 2.2. Разработчики, чьи имена начинаются с ООО
+SELECT id, name
+FROM developer
+WHERE name LIKE 'НКО%';
+
+-- 2.3. Игры изданные с 2020 по 2022, не от издателей с id 1, 5 и 6
+SELECT publisher_id, name, release_date
+FROM game
+WHERE release_date BETWEEN '2020-01-01' AND '2022-01-01'
+  AND publisher_id NOT IN (1, 5, 6);
+
+-- 3. Получить логины юзеров и длину их паролей
+SELECT login, LENGTH(password)
+FROM customer;
+
+-- 4. Все записи из таблицы game отсортированные по названию (по алфавиту) и по дате выпуска (по возрастанию)
+SELECT *
+FROM game
+ORDER BY (name, release_date);
+
+-- 5. Максимальная, минимальная и средняя цена всех игр
+SELECT MAX(price), MIN(price), AVG(price)
+FROM game;
+
+-- 6.1. Название игры, у которых есть оценка, название разработчика и оценка
+SELECT g.name, d.name, r.rate
+FROM game as g
+         JOIN developer d on d.id = g.developer_id
+         JOIN review r on r.game_id = g.id
+ORDER BY (g.name);
+
+-- 6.2. Имя игры, дата заказа и логин заказавшего
+SELECT g.name, p.date, c.login
+FROM purchase as p
+         JOIN customer c on p.customer_id = c.id
+         JOIN purchase_to_game ptg on ptg.purchase_id = p.id
+         JOIN game g on ptg.game_id = g.id
+ORDER BY (g.name);
+
+-- 7. Кол-во жанров у 5 игр
+SELECT g.name, COUNT(*)
+FROM game as g
+         JOIN game_to_genre gtg on g.id = gtg.game_id
+         JOIN genre gen on gtg.genre_id = gen.id
+GROUP BY (g.name), g.name
+ORDER BY g.name
+LIMIT 5;
+
+-- 8. Получение логинов юзеров, которые приобрели новинки.
+SELECT ld.login
+FROM (
+         SELECT c.login, g.name, g.release_date
+         FROM customer as c
+                  JOIN purchase p on c.id = p.customer_id
+                  JOIN purchase_to_game ptg on p.id = ptg.purchase_id
+                  JOIN game g on ptg.game_id = g.id
+         WHERE g.release_date BETWEEN '2020-01-01' AND '2022-01-01'
+     ) as ld
+ORDER BY (ld.login);
+
+-- 9. Сменить страну разработчика на Russia и количество выпущенных игр на 100, если его название начинается с ООО или
+-- ТСЖ
+UPDATE developer
+SET country    = 'Russia',
+    game_count = 100
+WHERE name LIKE 'ООО%'
+   OR name LIKE 'ТСЖ%';
+
+-- 10. Удалить ревью с минимальной оценкой
+DELETE
+FROM review
+WHERE rate = (
+    SELECT MIN(rate)
+    FROM review
+);
+
+-- 11. Удалить всех покупателей, у которых нет ни заказов ни ревью
+DELETE
+FROM customer
+WHERE id NOT IN (
+    SELECT customer_id
+    FROM purchase
+)
+  AND id NOT IN (
+    SELECT customer_id
+    FROM review
+);
