@@ -23,6 +23,9 @@
 -- Создание базы
 CREATE DATABASE computer_games_store;
 
+-- Создание базы
+CREATE DATABASE computer_games_store;
+
 -- Создание таблиц
 CREATE TABLE customer
 (
@@ -51,7 +54,7 @@ CREATE TABLE genre
 CREATE TABLE developer
 (
    id           serial PRIMARY KEY,
-   publisher_id BIGINT REFERENCES publisher (id),
+   publisher_id BIGINT  REFERENCES publisher (id) ON DELETE SET NULL,
    name         text    NOT NULl UNIQUE,
    country      text    NOT NULL,
    found_date   DATE    NOT NULL,
@@ -61,42 +64,41 @@ CREATE TABLE developer
 CREATE TABLE game
 (
    id           serial PRIMARY KEY,
-   developer_id BIGINT REFERENCES developer (id) NOT NULL,
-   publisher_id BIGINT REFERENCES publisher (id) NOT NULL,
-   name         text                             NOT NULL UNIQUE,
-   release_date DATE                             NOT NULL,
-   price        DOUBLE PRECISION                 NOT NULL,
-   description  text UNIQUE                      NOT NULL
+   developer_id BIGINT REFERENCES developer (id) ON DELETE CASCADE NOT NULL,
+   publisher_id BIGINT REFERENCES publisher (id) ON DELETE CASCADE NOT NULL,
+   name         text                                               NOT NULL UNIQUE,
+   release_date DATE                                               NOT NULL,
+   price        DOUBLE PRECISION                                   NOT NULL,
+   description  text UNIQUE                                        NOT NULL
 );
 
 CREATE TABLE game_to_genre
 (
-   game_id  BIGINT REFERENCES game (id)  NOT NULL,
-   genre_id BIGINT REFERENCES genre (id) NOT NULL
+   game_id  BIGINT REFERENCES game (id) ON DELETE CASCADE  NOT NULL,
+   genre_id BIGINT REFERENCES genre (id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE purchase
 (
    id          serial PRIMARY KEY,
-   customer_id BIGINT REFERENCES customer (id) NOT NULL,
-   date        DATE                            NOT NULL
+   customer_id BIGINT REFERENCES customer (id) ON DELETE CASCADE NOT NULL,
+   date        DATE                                              NOT NULL
 );
 
 CREATE TABLE purchase_to_game
 (
-   purchase_id BIGINT REFERENCES purchase (id) NOT NULL,
-   game_id     BIGINT REFERENCES game (id)     NOT NULL
+   purchase_id BIGINT REFERENCES purchase (id) ON DELETE CASCADE NOT NULL,
+   game_id     BIGINT REFERENCES game (id) ON DELETE CASCADE     NOT NULL
 );
 
 CREATE TABLE review
 (
    id          serial PRIMARY KEY,
-   customer_id BIGINT REFERENCES customer (id)           NOT NULL,
-   game_id     BIGINT REFERENCES game (id)               NOT NULL,
-   rate        SMALLINT CHECK (rate <= 10 and rate >= 0) NOT NULL,
-   review_text text                                      NOT NULL
+   customer_id BIGINT REFERENCES customer (id) ON DELETE CASCADE NOT NULL,
+   game_id     BIGINT REFERENCES game (id) ON DELETE CASCADE     NOT NULL,
+   rate        SMALLINT CHECK (rate <= 10 and rate >= 0)         NOT NULL,
+   review_text text                                              NOT NULL
 );
-
 ```
 
 Отмечу, что таблицы *purchase_to_game* и *game_to_genre* необходимы для обеспечения удобной связи многие-ко-многим.
