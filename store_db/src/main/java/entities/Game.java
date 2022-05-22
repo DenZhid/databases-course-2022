@@ -6,14 +6,40 @@ import java.util.List;
 
 public class Game {
 
+    private final long id;
     private final long developerId;
     private final long publisherId;
+    private final String developerName; // Для использования Dao
+    private final String publisherName; // Для использования Dao
     private final String name;
     private final LocalDate releaseDate;
     private final float price;
     private final String description;
-    private final List<String> listOfGenres = new ArrayList<>();
+    private final List<String> listOfGenres = new ArrayList<>(); //  Для использования Dao
 
+    public Game(
+            long id,
+            long developerId,
+            long publisherId,
+            String developerName,
+            String publisherName,
+            String name,
+            LocalDate releaseDate,
+            float price,
+            String description
+    ) {
+        this.id = id;
+        this.developerId = developerId;
+        this.publisherId = publisherId;
+        this.developerName = developerName;
+        this.publisherName = publisherName;
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.price = price;
+        this.description = description;
+    }
+
+    // Используется генератором, поля id, developerName, publisherName не важны
     public Game(
             long developerId,
             long publisherId,
@@ -22,8 +48,11 @@ public class Game {
             float price,
             String description
     ) {
+        this.id = 0;
         this.developerId = developerId;
         this.publisherId = publisherId;
+        this.developerName = "";
+        this.publisherName = "";
         this.name = name;
         this.releaseDate = releaseDate;
         this.price = price;
@@ -56,9 +85,5 @@ public class Game {
 
     public String getDescription() {
         return description;
-    }
-
-    public List<String> getListOfGenres() {
-        return listOfGenres;
     }
 }

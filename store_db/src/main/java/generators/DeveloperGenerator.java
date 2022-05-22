@@ -25,7 +25,7 @@ public class DeveloperGenerator extends Generator {
     protected Developer generate() {
         return new Developer(
                 createRandomPublisherId(),
-                faker.company().name(), // Используем случайное имя компании
+                faker.letterify(createTemplate(getLength(50, 10))), // Используем случайное имя компании
                 faker.country().name(),
                 // Примерно 22 года до сегодняшней даты, но не меньше года
                 faker.date().past(8030, 365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),

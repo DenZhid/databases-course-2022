@@ -20,7 +20,7 @@ public class PublisherGenerator extends Generator {
     @Override
     protected Publisher generate() {
         return new Publisher(
-                faker.company().name(),
+                faker.letterify(createTemplate(getLength(50, 10))),
                 faker.country().name(),
                 // Примерно 22 года до сегодняшней даты
                 faker.date().past(8030, 365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),

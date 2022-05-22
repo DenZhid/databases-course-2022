@@ -43,7 +43,7 @@ public class GameGenerator extends Generator {
         return new Game(
                 ids[0],
                 ids[1],
-                faker.book().title(),
+                faker.letterify(createTemplate(getLength(50, 10))),
                 faker.date()
                         .past(atMost + 365, TimeUnit.DAYS)
                         .toInstant()
