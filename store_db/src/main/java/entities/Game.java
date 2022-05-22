@@ -1,22 +1,26 @@
 package entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
+
     private final long developerId;
     private final long publisherId;
     private final String name;
     private final LocalDate releaseDate;
     private final float price;
     private final String description;
+    private final List<String> listOfGenres = new ArrayList<>();
 
-    public Game (
-                long developerId,
-                long publisherId,
-                String name,
-                LocalDate releaseDate,
-                float price,
-                String description
+    public Game(
+            long developerId,
+            long publisherId,
+            String name,
+            LocalDate releaseDate,
+            float price,
+            String description
     ) {
         this.developerId = developerId;
         this.publisherId = publisherId;
@@ -24,6 +28,10 @@ public class Game {
         this.releaseDate = releaseDate;
         this.price = price;
         this.description = description;
+    }
+
+    public void addToListOfGenres(String genreName) {
+        listOfGenres.add(genreName);
     }
 
     public long getDeveloperId() {
@@ -48,5 +56,9 @@ public class Game {
 
     public String getDescription() {
         return description;
+    }
+
+    public List<String> getListOfGenres() {
+        return listOfGenres;
     }
 }
